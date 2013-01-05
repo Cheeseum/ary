@@ -1,6 +1,6 @@
 class Game
     run: () =>
-        # do run stuff here
+        Crafty.init(640, 480)
 
     update: (t, dt) =>
         # do updates here
