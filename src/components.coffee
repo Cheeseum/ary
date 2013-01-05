@@ -8,7 +8,3 @@ Crafty.c('Health', {
     hurt: (value) ->
         @health = Math.max(0, @health - value)
 })
-
-Crafty.c('Player', {
-    init: () ->
-})
