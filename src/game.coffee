@@ -1,17 +1,51 @@
 class Game
     run: () =>
         Crafty.init(640, 480)
+        .background('rgb(0, 0, 0)');
 
-        @player = Crafty.e("Player, 2D, DOM, Color, Twoway, Gravity")
+        @player = Crafty.e("Player, 2D, DOM, Color, Twoway, Gravity, Collision")
         .color('rgb(255, 255, 255)')
         .attr(
             w: 16
             h: 16
-            x: 0
+            x: 200
             y: 0
+            _detachNextFrame: false
         )
-        .twoway(2, 4)
-        .gravity("Platform")
+        .twoway(2, 6)
+        .gravity()
+        .collision()
+        .onHit("Platform", (hitArr) ->
+            for hit in hitArr
+                # top or bottom
+                if hit.normal.y != 0
+                    @_up = false
+
+                # top
+                if hit.normal.y == -1
+                    @_falling = false
+                    @_up = false
+                    @y = hit.obj.y - @h
+
+                    hit.obj.attach(@)
+
+                # right
+                if hit.normal.x == 1
+                    @x = hit.obj.x + hit.obj.w
+
+                # left
+                if hit.normal.x == -1
+                    @x = hit.obj.x - @w
+
+        ).bind('Move', () ->
+            if @_detachNextFrame and @_falling
+                @_detachNextFrame = false
+                @_parent?.detach(@)
+
+            @_detachNextFrame = not @_falling
+        )
+
+        @makePlatform(0, 400, 640, 1, 1)
 
         @startTimer()
 
@@ -29,14 +63,21 @@ class Game
             console.log('dicks')
         )
 
-    makePlatform: (x, y, width, height=32, speed=3) =>
-        Crafty.e("Platform, 2D, DOM, Color")
-        .color('rgb(0,0,0)')
-        .attr({w: width, h: height, x: x, y: y, dx: speed})
+    makePlatform: (x, y, width, height=1, speed=0) =>
+        platform = Crafty.e("Platform, 2D, DOM, Color, Collision")
+        .color('rgb(255, 255, 255)')
+        .attr(
+            w: width,
+            h: height,
+            x: x,
+            y: y,
+            dx: speed
+        )
         .bind('EnterFrame', () ->
             @x += @dx
         )
-        
+        .collision()
+
     startTimer: () =>
         Crafty.e("GameTimer, DOM, 2D, Text")
         .attr(
