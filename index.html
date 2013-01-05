@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+    <title>ary</title>
+</head>
+<body>
+    <canvas id="stage" width="640" height="480"></canvas>
+</body>
+<script type="text/javascript">
+     window.requestAnimFrame = (function(){
+        return window.requestAnimationFrame    ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame    ||
+            window.oRequestAnimationFrame      ||
+            window.msRequestAnimationFrame     ||
+            function (callback) {
+                window.setTimeout(callback, 1000 / 60);
+            };
+    })();
+</script>
+</html>
