@@ -12,7 +12,6 @@ class Game
             h: 16
             x: 200
             y: 10
-            _detachNextFrame: false
         )
         .twoway(2, 6)
         .gravity()

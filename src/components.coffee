@@ -11,7 +11,11 @@ Crafty.c('Health', {
 
 Crafty.c('PlatformCollision', {
     init: () ->
-       @requires('Collision, 2D')
+        @_up = false
+        @_falling = false
+        @_detachNextFrame = false
+
+        @requires('Collision, 2D')
 
     platformCollision: () ->
         @collision()
