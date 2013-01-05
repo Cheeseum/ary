@@ -1,7 +1,9 @@
 class Game
     run: () =>
         Crafty.init(640, 480)
-        .background('rgb(0, 0, 0)');
+        .background('rgb(25, 25, 25)')
+
+        Crafty.viewport.init(640, 480)
 
         @player = Crafty.e("Player, 2D, DOM, Color, Twoway, Gravity, Collision")
         .color('rgb(255, 255, 255)')
@@ -9,7 +11,7 @@ class Game
             w: 16
             h: 16
             x: 200
-            y: 0
+            y: 10
             _detachNextFrame: false
         )
         .twoway(2, 6)
@@ -46,6 +48,11 @@ class Game
         )
 
         @makePlatform(0, 400, 640, 1, 1)
+        Crafty.bind('EnterFrame', () =>
+            Crafty.viewport.y -= 1
+            if @player._y + @player.height + Crafty.viewport.y < 0
+                console.log 'game over :(' #TODO: gameover scene
+        )
 
         @startTimer()
 
