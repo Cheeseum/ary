@@ -1,9 +1,7 @@
 class Game
     run: () =>
         Crafty.init(640, 480)
+        
+        @player = Crafty.e("2Dm DOM, Keyboard, Player")
 
-    update: (t, dt) =>
-        # do updates here
-
-    draw: () =>
-        # do draw stuff here
+window.Game = Game
