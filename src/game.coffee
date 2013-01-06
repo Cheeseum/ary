@@ -18,27 +18,31 @@ class Game
         .platformCollision()
 
         @makePlatform(0, 400, 640, 1, 1)
-        Crafty.bind('EnterFrame', () =>
+        Crafty.bind('EnterFrame', (frame) =>
             Crafty.viewport.y -= 1
             if @player._y + @player.height + Crafty.viewport.y < 0
-                console.log 'game over :(' #TODO: gameover scene
+                console.log('game over :(') #TODO: gameover scene
+
+            @platformGenerator(frame)
         )
 
         @startTimer()
 
+    # btw enemies crash the game don't make any
     makeEnemy: (x, y) =>
-        Crafty.e('Enemy, 2D, DOM, Color, PlatformCollision')
+        Crafty.e('Enemy, 2D, DOM, Color, Gravity, PlatformCollision')
         .color('rgb(255, 255, 255)')
         .attr({w: 32, h: 32, x: 300, y: 150, dx: -4})
         .bind('EnterFrame', () ->
             @x += @dx
-
-            # reverse position when it reaches end of platofrm
-            # this.dx = -this.dx
+            
+            #if @_parent and (@_x > @_parent.x + @_parent.w or @_x < @_parent.x)
+            #    @dx = -@dx
         )
         .onHit('Player', () ->
             console.log('dicks')
         )
+        .gravity()
         .platformCollision()
 
     makePlatform: (x, y, width, height=1, speed=0) =>
@@ -55,6 +59,13 @@ class Game
             @x += @dx
         )
         .collision()
+
+    platformGenerator: (frame) =>
+        #TODO: increase frequency based on y value
+        if frame.frame % 30 == 0
+            speed = if Math.floor(Math.random() * 2) then 1 else -1
+            xpos = if speed == 1 then -640 else 640
+            @makePlatform(xpos, @player._y + 300, 280, 1, speed * Math.floor(Math.random() * 5 + 1))
 
     startTimer: () =>
         Crafty.e('GameTimer, DOM, 2D, Text')
