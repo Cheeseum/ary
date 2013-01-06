@@ -17,7 +17,7 @@ class Game
         .gravity()
         .platformCollision()
 
-        @makePlatform(0, 400, 640, 1, 1)
+        @makePlatform(160, 400, 320, 1, 0)
         Crafty.bind('EnterFrame', (frame) =>
             Crafty.viewport.y -= 1
             if @player._y + @player.height + Crafty.viewport.y < 0
