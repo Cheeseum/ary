@@ -13,7 +13,7 @@ class Game
             x: 200
             y: 10
         )
-        .twoway(2, 6)
+        .twoway(4, 6)
         .gravity()
         .platformCollision()
 
@@ -61,11 +61,14 @@ class Game
         .collision()
 
     platformGenerator: (frame) =>
-        #TODO: increase frequency based on y value
-        if frame.frame % 30 == 0
-            speed = if Math.floor(Math.random() * 2) then 1 else -1
+        @last_platform or= frame.frame
+        if frame.frame - @last_platform > 100 / (@player._y / 500)
+            @last_platform = frame.frame
+
+            speed = if Crafty.math.randomInt(0, 1) then 1 else -1
             xpos = if speed == 1 then -640 else 640
-            @makePlatform(xpos, @player._y + 300, 280, 1, speed * Math.floor(Math.random() * 5 + 1))
+            ypos = @player._y + Crafty.math.randomInt(300, 480)
+            @makePlatform(xpos, ypos, 280, 1, speed * Crafty.math.randomInt(1,5))
 
     startTimer: () =>
         Crafty.e('GameTimer, DOM, 2D, Text')
