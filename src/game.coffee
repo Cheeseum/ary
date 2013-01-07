@@ -67,6 +67,8 @@ class Game
         )
         .bind('EnterFrame', () ->
             @x += @dx
+            if @x > Crafty.viewport.width*3 or @x+width < -Crafty.viewport.height*2
+                @destroy() #kill platforms as they move offscreen
         )
         .collision()
 
