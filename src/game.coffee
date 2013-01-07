@@ -25,7 +25,7 @@ class Game
         .color('rgb(255, 255, 255)')
 
         Crafty.bind('EnterFrame', (frame) =>
-            Crafty.viewport.y -= 1
+            Crafty.viewport.y -= 1 if frame.frame % 2 is 0 # scroll every 2 frames
             if @player._y + @player.height + Crafty.viewport.y < 0
                 console.log('game over :(') #TODO: gameover scene
 
@@ -78,15 +78,19 @@ class Game
 
     platformGenerator: (frame) =>
         @last_platform or= frame.frame
-        freq = 100
 
-        if frame.frame - @last_platform > freq / (@player._y / 500)
+        increase_intv = Math.floor(@player._y / 500) # every 2000 units increase the frequency
+        freq = 100 / (increase_intv + 1) # base freq of (1000 / 25) since intv starts at 0
+
+        if frame.frame - @last_platform > freq
             @last_platform = frame.frame
 
             width = Crafty.math.randomInt(@width / 8, @width / 4)
             speed = if Crafty.math.randomInt(0, 1) then 1 else -1
-            xpos = if speed == 1 then -640 else 640
-            ypos = @player._y + Crafty.math.randomInt(300, 480)
+            
+            xpos = @width * speed * -1 # place platform offscreen
+            ypos = @player._y + Crafty.math.randomInt(@height / 3, @height / 5)
+
             @makePlatform(xpos, ypos, width, speed * Crafty.math.randomInt(1, 5))
 
     startTimer: () =>
