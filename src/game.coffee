@@ -16,7 +16,7 @@ class Game
             x: (@width / 2) - 8
             y: 10
         )
-        .twoway(4, 6)
+        .twoway(5, 5)
         .gravity()
         .gravityConst(0.2)
         .platformCollision()
@@ -25,8 +25,9 @@ class Game
         .color('rgb(255, 255, 255)')
 
         Crafty.bind('EnterFrame', (frame) =>
-            Crafty.viewport.y -= 1 if frame.frame % 2 is 0 # scroll every 2 frames
-            if @player._y + @player.height + Crafty.viewport.y < 0
+            Crafty.viewport.y -= 2 if frame.frame % 2 is 0 # scroll every 2 frames
+
+            if @player._y + @player.h + Crafty.viewport.y < 0 or @player._y + @player.h + Crafty.viewport.y > @height
                 console.log('game over :(') #TODO: gameover scene
 
             @platformGenerator(frame)
@@ -87,7 +88,7 @@ class Game
 
             width = Crafty.math.randomInt(@width / 8, @width / 4)
             speed = if Crafty.math.randomInt(0, 1) then 1 else -1
-            
+
             xpos = @width * speed * -1 # place platform offscreen
             ypos = @player._y + Crafty.math.randomInt(@height / 3, @height / 5)
 
