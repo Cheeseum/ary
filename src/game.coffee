@@ -87,7 +87,7 @@ class Game
 
         if frame.frame - @last_platform > freq
             @last_platform = frame.frame
-            
+
             for i in [0..2]
                 width = Crafty.math.randomInt(@width / 6, @width / 4)
                 speed = if Crafty.math.randomInt(0, 1) then 1 else -1
@@ -99,12 +99,12 @@ class Game
 
     initStatusText: () =>
         sufferingCounter = document.createElement('div')
-        sufferingCounter.className = "Text"
-        Crafty.stage.elem.appendChild(sufferingCounter)
+        sufferingCounter.className = "suffering-text"
+        document.getElementById('cr-stage').appendChild(sufferingCounter)
         Crafty.bind('EnterFrame', (frame) ->
             sufferingCounter.innerHTML = "suffering: #{-Crafty.viewport.y}"
             if -Crafty.viewport.y > 500
-                sufferingCounter.className = "Text danger"
+                sufferingCounter.className = "suffering-text danger"
         )
 
 
