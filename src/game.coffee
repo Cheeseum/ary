@@ -33,7 +33,7 @@ class Game
             @platformGenerator(frame)
         )
 
-        @startTimer()
+        @initStatusText()
 
     # btw enemies crash the game don't make any
     makeEnemy: (x, y) =>
@@ -95,23 +95,17 @@ class Game
                 xpos = @width * speed * -1 # place platform offscreen
                 ypos = @player._y + Crafty.math.randomInt(@height, @height / 5) - Crafty.math.randomInt(0, @height / 2)
 
-                @makePlatform(xpos, ypos, width, speed * Crafty.math.randomInt(1, 5))
+                @makePlatform(xpos, ypos, width, speed * Crafty.math.randomInt(1, 4))
 
-    startTimer: () =>
-        Crafty.e('GameTimer, DOM, 2D, Text')
-        .attr(
-            x: 20,
-            y: 20,
-            w: 100,
-            h: 20,
-            time: 0
+    initStatusText: () =>
+        sufferingCounter = document.createElement('div')
+        sufferingCounter.className = "Text"
+        Crafty.stage.elem.appendChild(sufferingCounter)
+        Crafty.bind('EnterFrame', (frame) ->
+            sufferingCounter.innerHTML = "suffering: #{-Crafty.viewport.y}"
+            if -Crafty.viewport.y > 500
+                sufferingCounter.className = "Text danger"
         )
 
-        setInterval( () =>
-            Crafty('GameTimer').each( () ->
-                @time += 1
-                @text(@time)
-            )
-        , 1000)
 
 window.Game = Game
