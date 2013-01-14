@@ -1,6 +1,7 @@
 class Game
     width: 640,
     height: 480,
+    last_platform: 0,
 
     run: () =>
         Crafty.init(@width, @height)
@@ -55,7 +56,6 @@ class Game
     makePlatform: (x, y, width, speed=0) =>
         [r, g, b] = (Crafty.math.randomInt(127, 224) for n in [0..2])
         height = 4
-
         platform = Crafty.e('Platform, 2D, DOM, Color, Collision')
         .color("rgb(#{r}, #{g}, #{b})")
         .attr(
@@ -80,22 +80,19 @@ class Game
         return platform
 
     platformGenerator: (frame) =>
-        @last_platform or= frame.frame
-
         increase_intv = Math.floor(@player._y / 500) # every 2000 units increase the frequency
         freq = 100 / (increase_intv + 1) # base freq of (1000 / 25) since intv starts at 0
 
-        if frame.frame - @last_platform > freq
+        if frame.frame - @last_platform > freq and (@player.y + Crafty.viewport.y) < (@height / 2)
             @last_platform = frame.frame
 
-            for i in [0..2]
-                width = Crafty.math.randomInt(@width / 6, @width / 4)
-                speed = if Crafty.math.randomInt(0, 1) then 1 else -1
+            width = Crafty.math.randomInt(@width / 8, @width / 4)
+            speed = Crafty.math.randomInt(1, 4) * (if Crafty.math.randomInt(0, 1) then 1 else -1)
 
-                xpos = @width * speed * -1 # place platform offscreen
-                ypos = @player._y + Crafty.math.randomInt(@height, @height / 5) - Crafty.math.randomInt(0, @height / 2)
+            xpos = if speed > 0 then -width else @width + width # place platform offscreen
+            ypos = (@player.h * 2) * Math.floor((@height - Crafty.viewport.y) / (@player.h * 2))
 
-                @makePlatform(xpos, ypos, width, speed * Crafty.math.randomInt(1, 4))
+            @makePlatform(xpos, ypos, width, speed)
 
     initStatusText: () =>
         sufferingCounter = document.createElement('div')
